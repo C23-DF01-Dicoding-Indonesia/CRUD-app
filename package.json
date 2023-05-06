@@ -1,0 +1,23 @@
+{
+  "name": "crud-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/C23-DF01-Dicoding-Indonesia/CRUD-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/C23-DF01-Dicoding-Indonesia/CRUD-app/issues"
+  },
+  "homepage": "https://github.com/C23-DF01-Dicoding-Indonesia/CRUD-app#readme",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.2"
+  }
+}

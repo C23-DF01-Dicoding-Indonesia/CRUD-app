@@ -1,0 +1,3 @@
+getAllComments = (request, h) => {
+    
+}
