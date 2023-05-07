@@ -3,27 +3,27 @@ const{} = require("./handler");
 const routes = [
     {
         method: 'POST',
-        path: '/comments',
+        path: '/discussion',
         handler: () => {},
     },
     {
         method: 'GET',
-        path: '/comments',
+        path: '/discussion',
         handler: () => {},
     },
     {
         method: 'GET',
-        path: '/comments/{id}',
+        path: '/discussion/{id}',
         handler: () => {},
     },
     {
         method: 'PUT',
-        path: '/comments/{id}',
+        path: '/discussion/{id}',
         handler: () => {},
     },
     {
         method: 'DELETE',
-        path: '/comments/{id}',
+        path: '/discussion/{id}',
         handler: () => {},
     },
     
