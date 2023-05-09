@@ -1,4 +1,4 @@
-const{addDiscussionHandler, editDiscussionByIdHandler, getAllDiscussionsHandler} = require("./handler");
+const{addDiscussionHandler, editDiscussionByIdHandler, getAllDiscussionsHandler, deleteDiscussionByIdHandler} = require("./handler");
 
 const routes = [
     {
@@ -24,7 +24,7 @@ const routes = [
     {
         method: 'DELETE',
         path: '/discussion/{id}',
-        handler: () => {},
+        handler: deleteDiscussionByIdHandler,
     },
     
 ];

@@ -82,11 +82,35 @@ const editDiscussionByIdHandler = (request, h) => {
 
     const response = h.response({
         status: "fail",
-        message: "Gagal memperbarui buku. Id tidak ditemukan",
+        message: "Failed to update the discussion! Discussion ID not found.",
       });
       response.code(404);
       return response;
 };
+
+
+const deleteDiscussionByIdHandler = (request, h) => {
+    const { id } = request.params;
+    const index = discussions.findIndex((note) => note.id === id);
+
+    if (index !== -1) {
+        discussions.splice(index, 1);
+        const response = h.response({
+          status: "success",
+          message: "Discussion is succesfully deleted!",
+        });
+        response.code(200);
+        return response;
+      }
+    const response = h.response({
+    status: "fail",
+    message: "Failed to delete the discussion! Discussion ID not found.",
+    });
+    
+    response.code(404);
+    return response;
+ };
+
 
 const getAllDiscussionsHandler = () => ({
     status: 'success',
@@ -106,4 +130,5 @@ module.exports = {
     addDiscussionHandler,
     editDiscussionByIdHandler,
     getAllDiscussionsHandler,
+    deleteDiscussionByIdHandler,
 };
