@@ -1,15 +1,15 @@
-const{} = require("./handler");
+const{addDiscussionHandler, editDiscussionByIdHandler, getAllDiscussionsHandler} = require("./handler");
 
 const routes = [
     {
         method: 'POST',
         path: '/discussion',
-        handler: () => {},
+        handler: addDiscussionHandler,
     },
     {
         method: 'GET',
         path: '/discussion',
-        handler: () => {},
+        handler: getAllDiscussionsHandler,
     },
     {
         method: 'GET',
@@ -19,7 +19,7 @@ const routes = [
     {
         method: 'PUT',
         path: '/discussion/{id}',
-        handler: () => {},
+        handler: editDiscussionByIdHandler,
     },
     {
         method: 'DELETE',
@@ -28,3 +28,4 @@ const routes = [
     },
     
 ];
+module.exports = routes;
