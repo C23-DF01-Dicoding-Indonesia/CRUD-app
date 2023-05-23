@@ -3,7 +3,10 @@ import Head from 'next/head';
 import { BiPlus } from 'react-icons/bi';
 import Table from '../components/table';
 import Form from '../components/form';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
+import fetcher from '../lib/utils/fetcher'
+
+
 
 export default function Home() {
 
@@ -13,7 +16,25 @@ export default function Home() {
     }else setVisible(false);
   }
 
+  const[discussion, setDiscussion] = useState([]);
+  const [empty, setEmpty] = useState(false);
+
   const[visible, setVisible] = useState(false);
+ 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const { data: { discussions } } = await fetcher('http://localhost:9000/discussion');
+        console.log(discussions);
+        setDiscussion(discussions)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  },[])
+ 
 
   return (
     <>
@@ -35,10 +56,14 @@ export default function Home() {
         </div>
 
         {/* Form */}
-          { visible ? <Form></Form> : <></>}
+          { visible ? <Form ></Form> : <></>}
         {/* Table */}
         <div className="container mx-auto">
-          <Table />
+          {discussion && Object.keys(discussion).length > 0 ? (
+              <Table empty={empty} discussion={discussion} />
+            ) : (
+              <p>No discussion found.</p>
+            )}
         </div>
       </main>
     </>

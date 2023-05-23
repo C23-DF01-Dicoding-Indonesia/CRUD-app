@@ -1,16 +1,42 @@
 import {BiEdit, BiTrashAlt} from "react-icons/bi";
-import data from '../database/data.json'
+import dataasd from '../database/data.json'
 
-export default function Table(){
+
+export default function Table({empty, discussion}){
+    // function rowHandlers() {
+    //     var table = document.getElementById("tableId");
+    //     var rows = table.getElementsByTagName("tr");
+    //     for (i = 0; i < rows.length; i++) {
+    //         var currentRow = table.rows[i];
+    //         var createClickHandler = 
+    //             function(row) 
+    //             {
+    //                 return function() { 
+    //                                         var cell = row.getElementsByTagName("td")[0];
+    //                                         var id = cell.innerHTML;
+    //                                         alert("id:" + id);
+    //                                  };
+    //             };
+    
+    //         currentRow.onclick = createClickHandler(currentRow);
+    //     }
+    // }
+    
+    console.log(discussion)
+    // window.onload = rowHandlers();
+    
+  
+
+
     return(
-        <table className="min-w-full table-auto">
+        <table id="tableId" className="min-w-full table-auto"  class="table-fixed">
             <thead>
                 <tr className= "bg-gray-800">
                     <th className="px-16 py-2">
                         <span className="text-gray-300">id</span>
                     </th>
                     <th className="px-16 py-2">
-                        <span className="text-gray-300">course_id</span>
+                            <span className="text-gray-300">course_id</span>
                     </th>
                     <th className="px-16 py-2">
                         <span className="text-gray-300">module_name</span>
@@ -21,7 +47,7 @@ export default function Table(){
                     <th className="px-16 py-2">
                        <span className="text-gray-300">discussion_title</span>
                     </th>
-                    <th className="px-16 py-2">
+                    <th className="px-16 py-2 break-word max-w-xs">
                         <span className="text-gray-300">question</span>
                     </th>
                     <th className="px-16 py-2">
@@ -34,7 +60,8 @@ export default function Table(){
             </thead>
             <tbody className="bg-gray-200">
                 {
-                    data.map((obj, i) => <Tr {...obj} key={i}/>)
+                    discussion.map((obj, i) => <Tr {...obj} key={i} />)
+                    // notes.map((obj, i) => <Tr {...obj} key={i}/>)
                 }
             </tbody>
         </table>
@@ -42,14 +69,21 @@ export default function Table(){
 }
 
 function Tr({id, course_id, module_name, tutorial_id, discussion_title, question, tags}){
+    
+    const handleClick = () => {
+        if (window) {
+            window.location.href = `/${id}/`;
+          }
+      };
+
     return (
         <>
-        <tr>
-                    <td className="px-16 py-2 items-center"> 
+        <tr onClick={handleClick}>
+                    <td className="px-16 py-2 items-center "> 
                         <span className="text-center ml-2 font-semibold">{id || "Unknown"}</span>                       
                     </td>
                     <td className="px-16 py-2 ">    
-                        <span>{course_id}</span>                       
+                        <span>{course_id || "Unknown" }</span>                       
                     </td>
                     <td className="px-16  py-2"> 
                         <span>{module_name || "Unknown"}</span>                       
@@ -60,7 +94,7 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
                     <td className="px-16  py-2"> 
                         <span>{discussion_title || "Unknown"}</span>                       
                     </td>
-                    <td className="px-16  py-2"> 
+                    <td className="px-16 py-2 break-word max-w-xs"> 
                         <span>{question || "Unknown"}</span>                       
                     </td>
                     <td className="px-16  py-2"> 
@@ -75,3 +109,4 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
         </>
     )
 }
+
