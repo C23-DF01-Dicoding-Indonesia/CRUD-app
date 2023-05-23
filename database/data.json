@@ -1,0 +1,11 @@
+[
+    {
+    "id": 1,
+    "course_id": "COURSE-123",
+    "module_name": "Module 1",
+    "tutorial_id": 101,
+    "discussion_title": "Introduction to Programming",
+    "question": "What is the difference between a variable and a constant?",
+    "tags": ["programming", "variables", "constants"]
+    }
+]
