@@ -120,7 +120,7 @@ const getAllDiscussionsHandler = () => ({
 const getDiscussionByIdHandler = (request, h) => {
   const { id } = request.params;
 
-  const discussion = discussions.find((n) => n.id === id);
+  const discussion = discussions.filter((n) => n.id === id)[0];
 
   if (discussion !== undefined) {
     return {
