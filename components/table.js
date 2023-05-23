@@ -1,9 +1,35 @@
 import {BiEdit, BiTrashAlt} from "react-icons/bi";
-import data from '../database/data.json'
+import dataasd from '../database/data.json'
 
-export default function Table(){
+
+export default function Table({empty, discussion}){
+    // function rowHandlers() {
+    //     var table = document.getElementById("tableId");
+    //     var rows = table.getElementsByTagName("tr");
+    //     for (i = 0; i < rows.length; i++) {
+    //         var currentRow = table.rows[i];
+    //         var createClickHandler = 
+    //             function(row) 
+    //             {
+    //                 return function() { 
+    //                                         var cell = row.getElementsByTagName("td")[0];
+    //                                         var id = cell.innerHTML;
+    //                                         alert("id:" + id);
+    //                                  };
+    //             };
+    
+    //         currentRow.onclick = createClickHandler(currentRow);
+    //     }
+    // }
+    
+    console.log(discussion)
+    // window.onload = rowHandlers();
+    
+  
+
+
     return(
-        <table className="min-w-full table-auto">
+        <table id="tableId" className="min-w-full table-auto"  class="table-fixed">
             <thead>
                 <tr className= "bg-gray-800">
                     <th className="px-5 py-2">
@@ -34,7 +60,8 @@ export default function Table(){
             </thead>
             <tbody className="bg-gray-200">
                 {
-                    data.map((obj, i) => <Tr {...obj} key={i}/>)
+                    discussion.map((obj, i) => <Tr {...obj} key={i} />)
+                    // notes.map((obj, i) => <Tr {...obj} key={i}/>)
                 }
             </tbody>
         </table>
@@ -42,9 +69,16 @@ export default function Table(){
 }
 
 function Tr({id, course_id, module_name, tutorial_id, discussion_title, question, tags}){
+    
+    const handleClick = () => {
+        if (window) {
+            window.location.href = `/${id}/`;
+          }
+      };
+
     return (
         <>
-            <tr>
+            <tr onClick={handleClick}>
                 <td className="px-5 py-2 items-center"> 
                     <span className="text-center ml-2 font-semibold">{id || "Unknown"}</span>                       
                 </td>
@@ -74,3 +108,4 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
         </>
     )
 }
+
