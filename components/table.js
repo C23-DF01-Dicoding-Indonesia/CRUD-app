@@ -1,4 +1,5 @@
 import {BiEdit, BiTrashAlt} from "react-icons/bi";
+import data from '../database/data.json'
 
 export default function Table(){
     return(
@@ -32,27 +33,38 @@ export default function Table(){
                 </tr>
             </thead>
             <tbody className="bg-gray-200">
-                <tr>
-                    <td className="px-16 py-2 flex flex-row items-center"> 
-                        <span className="text-center ml-2 font-semibold">123</span>                       
+                {
+                    data.map((obj, i) => <Tr {...obj} key={i}/>)
+                }
+            </tbody>
+        </table>
+    )
+}
+
+function Tr({id, course_id, module_name, tutorial_id, discussion_title, question, tags}){
+    return (
+        <>
+        <tr>
+                    <td className="px-16 py-2 items-center"> 
+                        <span className="text-center ml-2 font-semibold">{id || "Unknown"}</span>                       
                     </td>
-                    <td className="px-16 py-2 "> 
-                        <span>123</span>                       
+                    <td className="px-16 py-2 ">    
+                        <span>{course_id}</span>                       
                     </td>
                     <td className="px-16  py-2"> 
-                        <span>123</span>                       
+                        <span>{module_name || "Unknown"}</span>                       
                     </td>
                     <td className="px-16  py-2"> 
-                        <span>123</span>                       
+                        <span>{tutorial_id || "Unknown"}</span>                       
                     </td>
                     <td className="px-16  py-2"> 
-                        <span>123</span>                       
+                        <span>{discussion_title || "Unknown"}</span>                       
                     </td>
                     <td className="px-16  py-2"> 
-                        <span>123</span>                       
+                        <span>{question || "Unknown"}</span>                       
                     </td>
                     <td className="px-16  py-2"> 
-                        <span>123</span>                       
+                        <span>{tags || "Unknown"}</span>                       
                     </td>
                     <td className="px-16  py-2"> 
                         <button className="cursor"><BiEdit size={25}></BiEdit></button>   
@@ -60,7 +72,6 @@ export default function Table(){
                  
                     </td>
                 </tr>
-            </tbody>
-        </table>
+        </>
     )
 }
