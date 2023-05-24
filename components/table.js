@@ -1,4 +1,4 @@
-import {BiEdit, BiTrashAlt} from "react-icons/bi";
+import {BiEdit, BiTrashAlt} from 'react-icons/bi';
 import dataasd from '../database/data.json'
 
 
@@ -29,7 +29,7 @@ export default function Table({empty, discussion}){
 
 
     return(
-        <table id="tableId" className="min-w-full table-auto"  class="table-fixed">
+        <table id="tableId" className="min-w-full table-auto">
             <thead>
                 <tr className= "bg-gray-800">
                     <th className="px-5 py-2">
@@ -74,7 +74,8 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
         if (window) {
             window.location.href = `/${id}/`;
           }
-      };
+    };
+    const truncate = (input) => input?.length > 150 ? `${input.substring(0, 150)}...` : input;
 
     return (
         <>
@@ -94,8 +95,8 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
                 <td className="px-5  py-2"> 
                     <span>{discussion_title || "Unknown"}</span>                       
                 </td>
-                <td className="px-5  py-2"> 
-                    <span>{question || "Unknown"}</span>                       
+                <td className="px-5  py-2 break-all"> 
+                    <span>{truncate(question) || "Unknown"}</span>                       
                 </td>
                 <td className="px-5  py-2"> 
                     <span>{tags || "Unknown"}</span>                       
