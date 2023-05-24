@@ -48,7 +48,7 @@ const editDiscussionByIdHandler = (request, h) => {
   const { id } = request.params;
   const { discussion_title, question, tags } = request.payload;
 
-  const index = discussions.findIndex((note) => note.id === id);
+  const index = discussions.findIndex((note) => note.id == id);
 
   if (!discussion_title | !question | !tags) {
     messages = "Failed to update the discussion!";
@@ -90,7 +90,7 @@ const editDiscussionByIdHandler = (request, h) => {
 
 const deleteDiscussionByIdHandler = (request, h) => {
   const { id } = request.params;
-  const index = discussions.findIndex((note) => note.id === id);
+  const index = discussions.findIndex((note) => note.id == id);
 
   if (index !== -1) {
     discussions.splice(index, 1);
@@ -120,8 +120,8 @@ const getAllDiscussionsHandler = () => ({
 const getDiscussionByIdHandler = (request, h) => {
   const { id } = request.params;
 
-  const discussion = discussions.filter((n) => n.id === id)[0];
-
+  const discussion = discussions.filter((n) => n.id == id)[0];
+  
   if (discussion !== undefined) {
     return {
       status: "success",
