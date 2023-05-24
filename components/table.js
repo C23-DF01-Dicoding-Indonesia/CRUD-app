@@ -75,7 +75,7 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
             window.location.href = `/${id}/`;
           }
     };
-    const truncate = (input) => input?.length > 150 ? `${input.substring(0, 150)}...` : input;
+    const truncate = (input) => input?.length > 190 ? `${input.substring(0, 190)}...` : input;
 
     return (
         <>
@@ -95,8 +95,8 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
                 <td className="px-5  py-2"> 
                     <span>{discussion_title || "Unknown"}</span>                       
                 </td>
-                <td className="px-5  py-2 break-all"> 
-                    <span>{truncate(question) || "Unknown"}</span>                       
+                <td className="px-5  py-2 break-all "> 
+                    <div dangerouslySetInnerHTML={{ __html: truncate(question)}}/>                       
                 </td>
                 <td className="px-5  py-2"> 
                     <span>{tags || "Unknown"}</span>                       
