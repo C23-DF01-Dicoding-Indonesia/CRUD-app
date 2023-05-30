@@ -1,5 +1,7 @@
-const { nanoid } = require("nanoid");
-const discussions = require("./discussions");
+const { nanoid } = require('nanoid');
+const discussions = require('./discussions');
+const { spawn } = require('node:child_process');
+const childPython = spawn('python', ['', '']);
 
 const addDiscussionHandler = (request, h) => {
   const { discussion_title, question, tags } = request.payload;
@@ -18,23 +20,23 @@ const addDiscussionHandler = (request, h) => {
   };
   if (discussion_title === undefined) {
     const response = h.response({
-      status: "fail",
-      message: "Failed to add new discussion. Please enter the title!",
+      status: 'fail',
+      message: 'Failed to add new discussion. Please enter the title!',
     });
     response.code(400);
     return response;
   }
   if (question === undefined) {
     const response = h.response({
-      status: "fail",
-      message: "Failed to add new discussion. Please enter the description!",
+      status: 'fail',
+      message: 'Failed to add new discussion. Please enter the description!',
     });
     response.code(400);
     return response;
   }
   const response = h.response({
-    status: "success",
-    message: "Discussion is successfully added",
+    status: 'success',
+    message: 'Discussion is successfully added',
     data: {
       descId: id,
     },
@@ -51,9 +53,9 @@ const editDiscussionByIdHandler = (request, h) => {
   const index = discussions.findIndex((note) => note.id == id);
 
   if (!discussion_title | !question | !tags) {
-    messages = "Failed to update the discussion!";
+    messages = 'Failed to update the discussion!';
     const response = h.response({
-      status: "fail",
+      status: 'fail',
       message: messages,
     });
     response.code(400);
@@ -73,16 +75,16 @@ const editDiscussionByIdHandler = (request, h) => {
     };
 
     const response = h.response({
-      status: "success",
-      message: "Discussion is succesfully updated!",
+      status: 'success',
+      message: 'Discussion is succesfully updated!',
     });
     response.code(200);
     return response;
   }
 
   const response = h.response({
-    status: "fail",
-    message: "Failed to update the discussion! Discussion ID not found.",
+    status: 'fail',
+    message: 'Failed to update the discussion! Discussion ID not found.',
   });
   response.code(404);
   return response;
@@ -95,15 +97,15 @@ const deleteDiscussionByIdHandler = (request, h) => {
   if (index !== -1) {
     discussions.splice(index, 1);
     const response = h.response({
-      status: "success",
-      message: "Discussion is succesfully deleted!",
+      status: 'success',
+      message: 'Discussion is succesfully deleted!',
     });
     response.code(200);
     return response;
   }
   const response = h.response({
-    status: "fail",
-    message: "Failed to delete the discussion! Discussion ID not found.",
+    status: 'fail',
+    message: 'Failed to delete the discussion! Discussion ID not found.',
   });
 
   response.code(404);
@@ -111,7 +113,7 @@ const deleteDiscussionByIdHandler = (request, h) => {
 };
 
 const getAllDiscussionsHandler = () => ({
-  status: "success",
+  status: 'success',
   data: {
     discussions,
   },
@@ -121,8 +123,8 @@ const searchDiscussionHandler = (request, h) => {
   const { q } = request.query;
   
   const response = h.response({
-    status: "success",
-    message: "yeay",
+    status: 'success',
+    message: 'yeay',
     data: {
       q,
     },
@@ -137,7 +139,7 @@ const getDiscussionByIdHandler = (request, h) => {
   
   if (discussion !== undefined) {
     return {
-      status: "success",
+      status: 'success',
       data: {
         discussion,
       },
@@ -145,8 +147,8 @@ const getDiscussionByIdHandler = (request, h) => {
   }
 
   const response = h.response({
-    status: "fail",
-    message: "Discussion is not found",
+    status: 'fail',
+    message: 'Discussion is not found',
   });
   response.code(404);
   return response;

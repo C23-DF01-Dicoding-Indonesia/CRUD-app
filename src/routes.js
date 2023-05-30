@@ -5,7 +5,7 @@ const{
     searchDiscussionHandler,
     getDiscussionByIdHandler,
     deleteDiscussionByIdHandler
-} = require("./handler");
+} = require('./handler');
 
 const routes = [
     {
@@ -20,13 +20,13 @@ const routes = [
     },
     {
         method: 'GET',
-        path: '/discussion/{id}',
-        handler: getDiscussionByIdHandler,
+        path: '/discussion/search',
+        handler: searchDiscussionHandler,
     },
     {
         method: 'GET',
-        path: '/discussion/search',
-        handler: searchDiscussionHandler,
+        path: '/discussion/{id}',
+        handler: getDiscussionByIdHandler,
     },
     {
         method: 'PUT',
