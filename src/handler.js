@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const discussions = require('./discussions');
 const { spawn } = require('node:child_process');
-const childPython = spawn('python', ['', '']);
+// const childPython = spawn('python', ['', '']);
 
 const addDiscussionHandler = (request, h) => {
   const { discussion_title, question, tags } = request.payload;
