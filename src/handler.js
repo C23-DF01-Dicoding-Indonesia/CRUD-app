@@ -117,6 +117,19 @@ const getAllDiscussionsHandler = () => ({
   },
 });
 
+const searchDiscussionHandler = (request, h) => {
+  const { q } = request.query;
+  
+  const response = h.response({
+    status: "success",
+    message: "yeay",
+    data: {
+      q,
+    },
+  });
+  return response;
+};
+
 const getDiscussionByIdHandler = (request, h) => {
   const { id } = request.params;
 
@@ -148,6 +161,7 @@ module.exports = {
   addDiscussionHandler,
   editDiscussionByIdHandler,
   getAllDiscussionsHandler,
+  searchDiscussionHandler,
   getDiscussionByIdHandler,
   deleteDiscussionByIdHandler,
 };
