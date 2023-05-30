@@ -1,8 +1,9 @@
 import React from 'react';
 import Head from 'next/head';
-import { BiPlus,  BiSearch} from 'react-icons/bi';
+import { BiPlus } from 'react-icons/bi';
 import Table from '../components/table';
 import Form from '../components/form';
+import SearchInput from '../components/SearchInput'
 import {useState, useEffect} from 'react'
 import fetcher from '../lib/utils/fetcher'
 
@@ -53,13 +54,7 @@ export default function Home() {
               <span className="px-1"><BiPlus size={23} /></span>
             </button>
           </div>
-            <form action=''>
-              <div className='relative flex items-center text-gray-400 focus-within:text-gray-300'>
-                <input type='text' name='query' placeholder='Search Discussion' autoComplete='off' aria-label='Search Discussion' className='pr-3 pl-10 py-2 placeholder-gray-400 text-black rounded-md border-2 focus:outline-none focus:border-gray-400 focus:placeholder-gray-300'/>
-                <span className='w-5 h-5 absolute ml-3 pointer-events-none'><BiSearch size={23} /></span>
-
-              </div>
-            </form>
+          <SearchInput/>
         </div>
 
 
