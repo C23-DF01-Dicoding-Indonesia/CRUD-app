@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const discussions = require('./discussions');
 const { spawn } = require('node:child_process');
-// const childPython = spawn('python', ['', '']);
+const { stderr } = require('node:process');
 
 const addDiscussionHandler = (request, h) => {
   const { discussion_title, question, tags } = request.payload;
@@ -121,7 +121,21 @@ const getAllDiscussionsHandler = () => ({
 
 const searchDiscussionHandler = (request, h) => {
   const { q } = request.query;
+  const childPython = spawn('python', ['../yet_another_demo_2.py', q]);
+
+  childPython.stdout.on('data', (data) => {
+    const list = JSON.parse(data);
   
+    console.log(list);
+  });
+  
+  childPython.stderr.on('data', (data)=>{
+    console.error(`stderr: ${data}`)
+  });
+
+  childPython.on('close', (code) => {
+    console.log(`child process exited with code ${code}`)
+  });
   const response = h.response({
     status: 'success',
     message: 'yeay',
@@ -130,6 +144,9 @@ const searchDiscussionHandler = (request, h) => {
     },
   });
   return response;
+
+
+
 };
 
 const getDiscussionByIdHandler = (request, h) => {
