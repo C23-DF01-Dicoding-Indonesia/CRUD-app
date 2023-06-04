@@ -1,6 +1,8 @@
 'use client';
+import SearchInput from '@/components/SearchInput';
 import Head from 'next/head';
 import { useSearchParams } from 'next/navigation';
+import DiscussionCard from '@/components/DiscussionCard';
 
 const SearchPage = () => {
 
@@ -18,9 +20,34 @@ const SearchPage = () => {
             <main className="py-5">
                 <h1 className="text-xl md:text-5xl text-center font-bold py-10">CRUD App Discussion Forum</h1>
                 <div>SEARCH PAGE</div>
+                <div className="container mx-auto flex justify-between py-5">
+                    <SearchInput/>
+                </div>
+                <div className="container mx-auto flex flex-wrap justify-center">
+                <DiscussionCard
+                    discussionTitle="Discussion Title 2"
+                    question="Question 2: loremdddddddddddddddddddddd ds dasdsk  ipsum"
+                    tags={['Tag 4', 'Tag 5', 'Tag 6']}
+                    />
+                <DiscussionCard
+                    discussionTitle="Discussion Title 1"
+                    question="Question 1: asdsadas"
+                    tags={['Tag 1', 'Tag 2', 'Tag 3']}
+                    />
+                    <DiscussionCard
+                    discussionTitle="Discussion Title 2"
+                    question="Question 2: lorem ipsum"
+                    tags={['Tag 4', 'Tag 5', 'Tag 6']}
+                    />
+                    
+                </div> 
+                
+
+   
             </main>
         </>
     );
 };
 
+  
 export default SearchPage;
