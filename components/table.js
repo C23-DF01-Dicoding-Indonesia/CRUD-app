@@ -61,7 +61,6 @@ export default function Table({empty, discussion}){
             <tbody className="bg-gray-200">
                 {
                     discussion.map((obj, i) => <Tr {...obj} key={i} />)
-                    // notes.map((obj, i) => <Tr {...obj} key={i}/>)
                 }
             </tbody>
         </table>

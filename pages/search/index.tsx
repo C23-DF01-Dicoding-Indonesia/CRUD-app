@@ -3,12 +3,15 @@ import SearchInput from '@/components/SearchInput';
 import Head from 'next/head';
 import { useSearchParams } from 'next/navigation';
 import DiscussionCard from '@/components/DiscussionCard';
+import data from '@/database/data.json';
+
 
 const SearchPage = () => {
 
     const search = useSearchParams();
     const seacrhQuery = search ? search.get('q') : null;
     const encodedSearchQuery = encodeURI(seacrhQuery || '');
+    const discussion = data;
     console.log('Search Params: ', encodedSearchQuery);
     return (
         <>
@@ -24,7 +27,10 @@ const SearchPage = () => {
                     <SearchInput/>
                 </div>
                 <div className="container mx-auto flex flex-wrap justify-center">
-                <DiscussionCard
+                {
+                    discussion.map((obj, i) => <DiscussionCard {...obj} key={i} />)
+                }
+                {/* <DiscussionCard
                     discussionTitle="Discussion Title 2"
                     question="Question 2: loremdddddddddddddddddddddd ds dasdsk  ipsum"
                     tags={['Tag 4', 'Tag 5', 'Tag 6']}
@@ -38,7 +44,7 @@ const SearchPage = () => {
                     discussionTitle="Discussion Title 2"
                     question="Question 2: lorem ipsum"
                     tags={['Tag 4', 'Tag 5', 'Tag 6']}
-                    />
+                    /> */}
                     
                 </div> 
                 

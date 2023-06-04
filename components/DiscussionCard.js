@@ -1,10 +1,10 @@
 import React from 'react';
 
-const DiscussionCard = ({ discussionTitle, question, tags }) => {
+const DiscussionCard = ({id, course_id, module_name, tutorial_id, discussion_title, question, tags}) => {
   return (
     <div className="w-full md:w-1/2 lg:w-1/2 xl:w-1/3 p-2">
       <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold">{discussionTitle}</h2>
+        <h2 className="text-xl font-bold">{discussion_title}</h2>
         <p className="text-gray-700 mb-4">{question}</p>
         <div className="flex flex-wrap">
           {tags.map((tag, index) => (
