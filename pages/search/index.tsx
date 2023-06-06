@@ -4,15 +4,33 @@ import Head from 'next/head';
 import { useSearchParams } from 'next/navigation';
 import DiscussionCard from '@/components/DiscussionCard';
 import data from '@/database/data.json';
+import {useState, useEffect} from 'react';
 
 
-const SearchPage = () => {
+const SearchPage = async () => {
 
-    const search = useSearchParams();
-    const seacrhQuery = search ? search.get('q') : null;
-    const encodedSearchQuery = encodeURI(seacrhQuery || '');
+    const [searchResults, setSearchResults] = useState(null);
     const discussion = data;
-    console.log('Search Params: ', encodedSearchQuery);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const search = useSearchParams();
+            const searchQuery = search ? search.get('q') : null;
+            const encodedSearchQuery = encodeURI(searchQuery || '');
+
+            const response = await fetch(`http://localhost:9000/search?q=${encodedSearchQuery}`);
+            const data = await response.json();
+            setSearchResults(data);
+          } catch(error){
+            console.error(error);
+          }
+        }
+        fetchData();        
+    }, []);
+
+    console.log('Search Results:', searchResults);
+
     return (
         <>
             <Head>

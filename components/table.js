@@ -35,7 +35,7 @@ export default function Table({empty, discussion}){
                     <th className="px-5 py-2">
                         <span className="text-gray-300">id</span>
                     </th>
-                    <th className="px-5 py-2">
+                    {/* <th className="px-5 py-2">
                         <span className="text-gray-300">course_id</span>
                     </th>
                     <th className="px-5 py-2">
@@ -43,7 +43,7 @@ export default function Table({empty, discussion}){
                     </th>
                     <th className="px-5 py-2">
                       <span className="text-gray-300">tutorial_id</span>
-                    </th>
+                    </th> */}
                     <th className="px-5 py-2">
                        <span className="text-gray-300">discussion_title</span>
                     </th>
@@ -82,7 +82,7 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
                 <td className="px-5 py-2 items-center"> 
                     <span className="text-center ml-2 font-semibold">{id || "Unknown"}</span>                       
                 </td>
-                <td className="px-5 py-2 ">    
+                {/* <td className="px-5 py-2 ">    
                     <span>{course_id}</span>                       
                 </td>
                 <td className="px-5  py-2"> 
@@ -90,7 +90,7 @@ function Tr({id, course_id, module_name, tutorial_id, discussion_title, question
                 </td>
                 <td className="px-5  py-2"> 
                     <span>{tutorial_id || "Unknown"}</span>                       
-                </td>
+                </td> */}
                 <td className="px-5  py-2"> 
                     <span>{discussion_title || "Unknown"}</span>                       
                 </td>
