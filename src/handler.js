@@ -1,50 +1,167 @@
 const { nanoid } = require('nanoid');
 const discussions = require('./discussions');
+const results = require('./results.js');
 const { spawn } = require('node:child_process');
-const { stderr } = require('node:process');
+const fs = require('fs');
+const util = require('util');
+const readFile = util.promisify(fs.readFile);
 
-const addDiscussionHandler = (request, h) => {
-  const { discussion_title, question, tags } = request.payload;
+const addDiscussionHandler = async (request, h) => {
+  const { discussion_title, question } = request.payload;
   const id = nanoid(16);
   const insertedAt = new Date().toISOString();
+  const query = discussion_title + ' ' + question;
 
-  const newDiscussions = {
-    id,
-    course_id,
-    module_name,
-    tutorial_id,
-    discussion_title,
-    question,
-    tags,
-    insertedAt,
-  };
-  if (discussion_title === undefined) {
-    const response = h.response({
-      status: 'fail',
-      message: 'Failed to add new discussion. Please enter the title!',
+  const childPython = spawn('python', ['./auto-tag.py', query]);
+
+  const childPythonPromise = new Promise((resolve, reject) => {
+    childPython.stdout.on('data', (data) => {
+      console.log(`${data}`);
     });
-    response.code(400);
-    return response;
-  }
-  if (question === undefined) {
-    const response = h.response({
-      status: 'fail',
-      message: 'Failed to add new discussion. Please enter the description!',
+    childPython.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
     });
-    response.code(400);
-    return response;
-  }
-  const response = h.response({
-    status: 'success',
-    message: 'Discussion is successfully added',
-    data: {
-      descId: id,
-    },
+    childPython.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+      resolve();
+    });
+    childPython.on('error', (err) => {
+      console.error('Error executing child process:', err);
+      reject(err);
+    });
   });
-  discussions.push(newDiscussions);
-  response.code(201);
-  return response;
+
+  try {
+    const [data, _] = await Promise.all([
+      readFile('./tag.json', 'utf-8'),
+      childPythonPromise,
+    ]);
+
+    const jsonData = JSON.parse(data);
+    const tags = jsonData.suggested_tags;
+
+    const newDiscussions = {
+      id,
+      discussion_title,
+      question,
+      tags,
+      insertedAt,
+    };
+
+    if (discussion_title === undefined) {
+      const response = h.response({
+        status: 'fail',
+        message: 'Failed to add new discussion. Please enter the title!',
+      });
+      response.code(400);
+      return response;
+    }
+    if (question === undefined) {
+      const response = h.response({
+        status: 'fail',
+        message: 'Failed to add new discussion. Please enter the description!',
+      });
+      response.code(400);
+      return response;
+    }
+
+    discussions.push(newDiscussions);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Discussion is successfully added',
+      data: {
+        descId: id,
+      },
+    });
+    response.code(201);
+    return response;
+  } catch (err) {
+    console.error('Error reading JSON file:', err);
+    const response = h.response({
+      status: 'fail',
+      message: 'Error reading JSON file',
+    });
+    response.code(500);
+    return response;
+  }
 };
+
+
+// const addDiscussionHandler = async (request, h) => {
+//   const { discussion_title, question } = request.payload;
+//   const id = nanoid(16);
+//   const insertedAt = new Date().toISOString();
+//   const query = discussion_title + ' ' + question;
+  
+  
+//   const childPython = spawn('python', ['./auto-tag.py', query]);
+
+//   const watchfile = 
+
+//   childPython.stdout.on('data', (data) => {
+//     console.log(`${data}`);
+//   });
+//   childPython.stderr.on('data', (data)=>{
+//     console.error(`stderr: ${data}`);
+//   });
+//   childPython.on('close', (code) => {
+//     console.log(`child process exited with code ${code}`);
+//   });
+  
+//   try {
+//     const data = await readFile('./tag.json', 'utf-8');
+//     const jsonData = JSON.parse(data);
+//     const tags = jsonData.suggested_tags;
+
+//     fs.watchFile('./tag.json', (curr, prev) => {
+//       const newDiscussions = {
+//         id,
+//         discussion_title,
+//         question,
+//         tags,
+//         insertedAt,
+//       };
+//       if (discussion_title === undefined) {
+//         const response = h.response({
+//           status: 'fail',
+//           message: 'Failed to add new discussion. Please enter the title!',
+//         });
+//         response.code(400);
+//         return response;
+//       }
+//       if (question === undefined) {
+//         const response = h.response({
+//           status: 'fail',
+//           message: 'Failed to add new discussion. Please enter the description!',
+//         });
+//         response.code(400);
+//         return response;
+//       }
+  
+//       discussions.push(newDiscussions);
+      
+//     });
+//     const response = h.response({
+//       status: 'success',
+//       message: 'Discussion is successfully added',
+//       data: {
+//         descId: id,
+//       },
+//     });
+//     response.code(201);
+//     return response;
+//   }
+//   catch(err){
+//     console.error('Error reading JSON file:', err);
+//     const response = h.response({
+//       status: 'fail',
+//       message: 'Error reading JSON file',
+//     });
+//     response.code(500);
+//     return response;
+//   }
+// };
 
 const editDiscussionByIdHandler = (request, h) => {
   const { id } = request.params;
@@ -121,12 +238,15 @@ const getAllDiscussionsHandler = () => ({
 
 const searchDiscussionHandler = (request, h) => {
   const { q } = request.query;
-  const childPython = spawn('python', ['../yet_another_demo_2.py', q]);
+  const childPython = spawn('python', ['./yet_another_demo_2.py', q]);
+  let list;
 
   childPython.stdout.on('data', (data) => {
-    const list = JSON.parse(data);
-  
-    console.log(list);
+    // list = `${data}`;
+    // results.push(list);
+    // let mystring = data.toString();
+    // let myJSON = JSON.parse(mystring);
+    console.log(`${data}`);
   });
   
   childPython.stderr.on('data', (data)=>{
@@ -140,7 +260,7 @@ const searchDiscussionHandler = (request, h) => {
     status: 'success',
     message: 'yeay',
     data: {
-      q,
+      results,
     },
   });
   return response;
