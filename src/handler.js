@@ -2,168 +2,10 @@ const { nanoid } = require('nanoid');
 const discussions = require('./discussions');
 const { spawn } = require('node:child_process');
 const fs = require('fs');
-const util = require('util');
-const readFile = util.promisify(fs.readFile);
-
-
-
-// const addDiscussionHandler = async (request, h) => {
-//   const { discussion_title, question } = request.payload;
-//   const id = nanoid(16);
-//   const insertedAt = new Date().toISOString();
-//   const query = discussion_title + ' ' + question;
-
-//   const childPython = spawn('python', ['./auto-tag.py', query]);
-
-//   const childPythonPromise = new Promise((resolve, reject) => {
-//     childPython.stdout.on('data', (data) => {
-//       console.log(`${data}`);
-//     });
-//     childPython.stderr.on('data', (data) => {
-//       console.error(`stderr: ${data}`);
-//     });
-//     childPython.on('close', (code) => {
-//       console.log(`child process exited with code ${code}`);
-//       resolve();
-//     });
-//     childPython.on('error', (err) => {
-//       console.error('Error executing child process:', err);
-//       reject(err);
-//     });
-//   });
-
-//   try {
-//     const [data, _] = await Promise.all([
-//       readFile('./tag.json', 'utf-8'),
-//       childPythonPromise,
-//     ]);
-
-//     const jsonData = JSON.parse(data);
-//     const tags = jsonData.suggested_tags;
-
-//     const newDiscussions = {
-//       id,
-//       discussion_title,
-//       question,
-//       tags,
-//       insertedAt,
-//     };
-
-//     if (discussion_title === undefined) {
-//       const response = h.response({
-//         status: 'fail',
-//         message: 'Failed to add new discussion. Please enter the title!',
-//       });
-//       response.code(400);
-//       return response;
-//     }
-//     if (question === undefined) {
-//       const response = h.response({
-//         status: 'fail',
-//         message: 'Failed to add new discussion. Please enter the description!',
-//       });
-//       response.code(400);
-//       return response;
-//     }
-
-//     discussions.push(newDiscussions);
-
-//     const response = h.response({
-//       status: 'success',
-//       message: 'Discussion is successfully added',
-//       data: {
-//         descId: id,
-//       },
-//     });
-//     response.code(201);
-//     return response;
-//   } catch (err) {
-//     console.error('Error reading JSON file:', err);
-//     const response = h.response({
-//       status: 'fail',
-//       message: 'Error reading JSON file',
-//     });
-//     response.code(500);
-//     return response;
-//   }
-// };
-
-// const addDiscussionHandler = async (request, h) => {
-//   const { discussion_title, question } = request.payload;
-//   const id = nanoid(3);
-//   const insertedAt = new Date().toISOString();
-//   const query = discussion_title + ' ' + question;
-  
-  
-//   const childPython = spawn('python', ['./auto-tag.py', query]);
-
-//   childPython.stdout.on('data', (data) => {
-//     console.log(`${data}`);
-//   });
-//   childPython.stderr.on('data', (data)=>{
-//     console.error(`stderr: ${data}`);
-//   });
-//   childPython.on('close', (code) => {
-//     console.log(`child process exited with code ${code}`);
-//   });
-  
-//   try {
-//     const data = await readFile('./tag.json', 'utf-8');
-//     const jsonData = JSON.parse(data);
-//     const tags = jsonData.suggested_tags;
-
-//     fs.watchFile('./tag.json', (curr, prev) => {
-//       const newDiscussions = {
-//         id,
-//         discussion_title,
-//         question,
-//         tags,
-//         insertedAt,
-//       };
-//       if (discussion_title === undefined) {
-//         const response = h.response({
-//           status: 'fail',
-//           message: 'Failed to add new discussion. Please enter the title!',
-//         });
-//         response.code(400);
-//         return response;
-//       }
-//       if (question === undefined) {
-//         const response = h.response({
-//           status: 'fail',
-//           message: 'Failed to add new discussion. Please enter the description!',
-//         });
-//         response.code(400);
-//         return response;
-//       }
-  
-//       discussions.push(newDiscussions);
-      
-//     });
-//     const response = h.response({
-//       status: 'success',
-//       message: 'Discussion is successfully added',
-//       data: {
-//         descId: id,
-//       },
-//     });
-//     response.code(201);
-//     return response;
-//   }
-//   catch(err){
-//     console.error('Error reading JSON file:', err);
-//     const response = h.response({
-//       status: 'fail',
-//       message: 'Error reading JSON file',
-//     });
-//     response.code(500);
-//     return response;
-//   }
-// };
 
 const addDiscussionHandler = async (request, h) => {
   const { discussion_title, question } = request.payload;
-  const id = nanoid(16);
+  const id = nanoid(3);
   const insertedAt = new Date().toISOString();
   const query = discussion_title + ' ' + question;
 
@@ -315,14 +157,10 @@ const getAllDiscussionsHandler = () => ({
 
 const searchDiscussionHandler = (request, h) => {
   const { q } = request.query;
-  const childPython = spawn('python', ['./yet_another_demo_2.py', q]);
+  const childPython = spawn('python', ['./semantic_search.py', q]);
   let list;
 
   childPython.stdout.on('data', (data) => {
-    // list = `${data}`;
-    // results.push(list);
-    // let mystring = data.toString();
-    // let myJSON = JSON.parse(mystring);
     console.log(`${data}`);
   });
   
@@ -333,6 +171,8 @@ const searchDiscussionHandler = (request, h) => {
   childPython.on('close', (code) => {
     console.log(`child process exited with code ${code}`)
   });
+  
+
   const response = h.response({
     status: 'success',
     message: 'yeay',
@@ -367,11 +207,6 @@ const getDiscussionByIdHandler = (request, h) => {
   response.code(404);
   return response;
 };
-
-// const getAllDiscussions = (request, h) => {
-//     const {tag, title} = request.query;
-//     const discussion = discussion.map(({id, publisher, title, tag, description}) => ({id, publisher, title, tag, description}));
-// }
 
 module.exports = {
   addDiscussionHandler,
