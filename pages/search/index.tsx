@@ -22,8 +22,7 @@ const SearchPage = () => {
             </Head>
             <main className="py-5">
                 <h1 className="text-xl md:text-5xl text-center font-bold py-10">CRUD App Discussion Forum</h1>
-                <div>SEARCH PAGE</div>
-                <div className="container mx-auto flex justify-between py-5">
+                <div className="container mx-auto flex justify-end py-5">
                     <SearchInput/>
                 </div>
                 <div className="container mx-auto flex flex-wrap justify-center">
