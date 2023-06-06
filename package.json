@@ -18,7 +18,8 @@
   "homepage": "https://github.com/C23-DF01-Dicoding-Indonesia/CRUD-app#readme",
   "dependencies": {
     "@hapi/hapi": "^21.3.2",
-    "nanoid": "^3.3.6"
+    "nanoid": "^3.3.6",
+    "node-fetch": "^3.3.1"
   },
   "description": "",
   "devDependencies": {
