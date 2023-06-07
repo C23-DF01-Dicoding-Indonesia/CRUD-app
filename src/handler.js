@@ -3,7 +3,6 @@ const discussions = require('./discussions');
 const { spawn } = require('node:child_process');
 const fs = require('fs');
 const axios = require('axios');
-const FormData = require('formdata');
 
 const addDiscussionHandler = async (request, h) => {
   const { discussion_title, question } = request.payload;
@@ -157,43 +156,22 @@ const getAllDiscussionsHandler = () => ({
   },
 });
 
-// const runChild = (query) => {
-//   let datas;
-//   const childPython = spawn('python', ['../py/search.py', query]);
-
-//   childPython.stdout.on('data', (data) => {
-//     datas = data;
-//   });
-  
-//   childPython.stderr.on('data', (data)=>{
-//     console.error(`stderr: ${data}`)
-//   });
-
-//   childPython.on('close', (code) => {
-//     console.log(`child process exited with code ${code}`)
-//     // executeTryBlock();
-//     return datas;
-//   });
-// };
-
 const searchDiscussionHandler = async (request, h) => {
   const { q } = request.query;
+  let result;
+  let arr = [];
   const jsonq = {
     query: q
   }
 
-  let result;
   try {
-    console.log("Testing1");
-    result = await axios.post('http://127.0.0.1:8080/search', jsonq);
-    console.log(result.data.data.length);
-  } catch (error) {
+    result = await axios.post('https://search-api-4mzlrxm2sa-et.a.run.app/search', jsonq);
+  }
+  catch (error) {
     console.error(error);
   }
-  console.log("Testing3");
-  let arr = [];
+
   for (let i = 0; i < result.data.data.length; i++){
-    console.log("Testing4");
     let temp = {
       id: result.data.data[i].id,
       title: result.data.data[i].title,
@@ -202,7 +180,6 @@ const searchDiscussionHandler = async (request, h) => {
       score: result.data.data[i].score,
     }
     arr.push(temp);
-    console.log(arr);
   }
 
   const response = h.response({
@@ -211,7 +188,6 @@ const searchDiscussionHandler = async (request, h) => {
     data: arr,
   });
   return response;
-
 };
 
 const getDiscussionByIdHandler = (request, h) => {
