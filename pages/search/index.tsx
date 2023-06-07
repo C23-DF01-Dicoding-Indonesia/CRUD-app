@@ -7,15 +7,15 @@ import data from '@/database/data.json';
 import {useState, useEffect} from 'react';
 
 
-const SearchPage = async () => {
+const SearchPage = () => {
 
     const [searchResults, setSearchResults] = useState(null);
     const discussion = data;
+    const search = useSearchParams();
 
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const search = useSearchParams();
             const searchQuery = search ? search.get('q') : null;
             const encodedSearchQuery = encodeURI(searchQuery || '');
 
@@ -47,21 +47,6 @@ const SearchPage = async () => {
                 {
                     discussion.map((obj, i) => <DiscussionCard {...obj} key={i} />)
                 }
-                {/* <DiscussionCard
-                    discussionTitle="Discussion Title 2"
-                    question="Question 2: loremdddddddddddddddddddddd ds dasdsk  ipsum"
-                    tags={['Tag 4', 'Tag 5', 'Tag 6']}
-                    />
-                <DiscussionCard
-                    discussionTitle="Discussion Title 1"
-                    question="Question 1: asdsadas"
-                    tags={['Tag 1', 'Tag 2', 'Tag 3']}
-                    />
-                    <DiscussionCard
-                    discussionTitle="Discussion Title 2"
-                    question="Question 2: lorem ipsum"
-                    tags={['Tag 4', 'Tag 5', 'Tag 6']}
-                    /> */}
                     
                 </div> 
                 
