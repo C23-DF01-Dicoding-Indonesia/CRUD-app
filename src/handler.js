@@ -2,6 +2,8 @@ const { nanoid } = require('nanoid');
 const discussions = require('./discussions');
 const { spawn } = require('node:child_process');
 const fs = require('fs');
+const axios = require('axios');
+const FormData = require('formdata');
 
 const addDiscussionHandler = async (request, h) => {
   const { discussion_title, question } = request.payload;
@@ -155,34 +157,60 @@ const getAllDiscussionsHandler = () => ({
   },
 });
 
-const searchDiscussionHandler = (request, h) => {
+// const runChild = (query) => {
+//   let datas;
+//   const childPython = spawn('python', ['../py/search.py', query]);
+
+//   childPython.stdout.on('data', (data) => {
+//     datas = data;
+//   });
+  
+//   childPython.stderr.on('data', (data)=>{
+//     console.error(`stderr: ${data}`)
+//   });
+
+//   childPython.on('close', (code) => {
+//     console.log(`child process exited with code ${code}`)
+//     // executeTryBlock();
+//     return datas;
+//   });
+// };
+
+const searchDiscussionHandler = async (request, h) => {
   const { q } = request.query;
-  const childPython = spawn('python', ['./semantic_search.py', q]);
-  let list;
+  const jsonq = {
+    query: q
+  }
 
-  childPython.stdout.on('data', (data) => {
-    console.log(`${data}`);
-  });
-  
-  childPython.stderr.on('data', (data)=>{
-    console.error(`stderr: ${data}`)
-  });
-
-  childPython.on('close', (code) => {
-    console.log(`child process exited with code ${code}`)
-  });
-  
+  let result;
+  try {
+    console.log("Testing1");
+    result = await axios.post('http://127.0.0.1:8080/search', jsonq);
+    console.log(result.data.data.length);
+  } catch (error) {
+    console.error(error);
+  }
+  console.log("Testing3");
+  let arr = [];
+  for (let i = 0; i < result.data.data.length; i++){
+    console.log("Testing4");
+    let temp = {
+      id: result.data.data[i].id,
+      title: result.data.data[i].title,
+      type: result.data.data[i].type,
+      content: result.data.data[i].content,
+      score: result.data.data[i].score,
+    }
+    arr.push(temp);
+    console.log(arr);
+  }
 
   const response = h.response({
     status: 'success',
     message: 'yeay',
-    data: {
-      q,
-    },
+    data: arr,
   });
   return response;
-
-
 
 };
 
