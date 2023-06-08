@@ -20,12 +20,11 @@ export default function AddDiscussionForm(props) {
     if (Object.keys(formData).length === 0) {
       console.log("There's no data!")
     } else {
-      console.log(formData)
       // Perform any further processing or submission here
       // Example: <Success message={"Discussion Added"}></Success>
       setIsFetching(true);
       try {
-        await fetch("http://localhost:9000/discussion", {
+        await fetch("https://deploy-project-389113.et.r.appspot.com/discussion", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -5,7 +5,6 @@ import Table from "../components/table";
 import Form from "../components/form";
 import SearchInput from "../components/SearchInput";
 import { useState, useEffect } from "react";
-import fetcher from "../lib/utils/fetcher";
 import Success from "@/components/success";
 
 export default function Home() {
@@ -17,9 +16,7 @@ export default function Home() {
     setSuccess(!success);
   };
 
-  // const [discussion, setDiscussion] = useState(null);
-  const [empty, setEmpty] = useState(false);
-  let arr;
+  const [discussion, setDiscussion] = useState(null);
   const [visible, setVisible] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -28,9 +25,7 @@ export default function Home() {
       try {
         const response = await fetch("https://deploy-project-389113.et.r.appspot.com/discussion");
         const discussions = await response.json();
-        console.log(discussions.data.discussions);
-        arr = discussions.data.discussions;
-        // setDiscussion(discussions.data.discussions);
+        setDiscussion(discussions.data.discussions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -78,8 +73,8 @@ export default function Home() {
         )}
         {/* Table */}
         <div className="container mx-auto">
-          {arr && Object.keys(arr).length > 0 ? (
-            <Table empty={empty} discussion={arr} />
+          {discussion && Object.keys(discussion).length > 0 ? (
+            <Table discussion={discussion} />
           ) : (
             <p>No discussion found.</p>
           )}

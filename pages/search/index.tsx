@@ -4,14 +4,12 @@ import Head from 'next/head';
 import { useSearchParams } from 'next/navigation';
 import DiscussionCard from '@/components/DiscussionCard';
 import {useState, useEffect} from 'react';
-import { useRouter } from 'next/navigation';
 
 
 const SearchPage = () => {
 
     const [searchResults, setSearchResults] = useState(null);
     const search = useSearchParams();
-    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,9 +26,7 @@ const SearchPage = () => {
           }
         }
         fetchData();        
-    }, []);
-
-    console.log('Search Results:', searchResults);
+    }, [searchResults]);
 
     return (
         <>

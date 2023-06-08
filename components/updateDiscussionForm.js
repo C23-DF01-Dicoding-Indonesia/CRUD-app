@@ -1,7 +1,6 @@
 import { useReducer } from "react"
 import { BiBrush } from "react-icons/bi"
 import Success from './success'
-import Bug from './bug'
 
 const formReducer = (state, event) => {
     return {
@@ -17,7 +16,6 @@ export default function UpdateDiscussionForm(){
     const handleSubmit = (e) => {
         e.preventDefault();
         if(Object.keys(formData).length==0) return console.log("There's no data!")
-        console.log(formData)
     }
 
     if(Object.keys(formData).length > 0) return <Success message={"Discussion Added"}></Success>

@@ -1,7 +1,5 @@
 import AddDiscussionForm from './addDiscussionForm'
 import UpdateDiscussionForm from './updateDiscussionForm'
-import {useState, useEffect} from 'react'
-
 
 export default function Form(props){
     const flag = true;
