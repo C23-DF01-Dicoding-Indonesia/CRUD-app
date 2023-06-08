@@ -1,17 +1,20 @@
 import React from 'react';
 
-const DiscussionCard = ({id, course_id, module_name, tutorial_id, discussion_title, question, tags}) => {
+const DiscussionCard = ({searchResults})=> {
+  return(
+    searchResults? searchResults.map((obj, i) => <DiscussionCards {...obj} key={i} />) : 'LOADING...'
+  );
+}
+
+const DiscussionCards = ({title, content, type, score}) => {
   return (
-    <div className="w-full md:w-1/2 lg:w-1/2 xl:w-1/3 p-2">
+    <div className="w-full md:w-1/2 lg:w-full xl:w-full p-2">
       <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold">{discussion_title}</h2>
-        <p className="text-gray-700 mb-4">{question}</p>
+        <h2 className="text-xl font-bold py-2">{title}</h2>
+        <p className="text-xl text-gray-700 mb-4">{content}</p>
         <div className="flex flex-wrap">
-          {tags.map((tag, index) => (
-            <span key={index} className="text-gray-700 text-sm mr-2 mb-2">
-              {tag}
-            </span>
-          ))}
+          <span className="text-gray-700 text-base mr-2 mb-2 bg-slate-300 px-2 rounded-md">{type}</span>
+          <span className="text-gray-700 text-base mr-2 mb-2 bg-slate-300 px-2 rounded-md">Relevance score: {score}</span>
         </div>
       </div>
     </div>

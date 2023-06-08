@@ -1,11 +1,6 @@
 import { useReducer } from 'react'
 import { BiPlus } from 'react-icons/bi'
-import Success from './success'
-import Bug from './bug'
 import {useState, useEffect} from 'react'
-import fetcher from '../lib/utils/fetcher'
-
-
 
 const formReducer = (state, event) => {
   return {
@@ -48,13 +43,8 @@ export default function AddDiscussionForm(props) {
       } finally {
         setIsFetching(false);
       }
-      
       props.onDiscussionAdded();
-      
     }
-
-        
-    
   }
 
   return (

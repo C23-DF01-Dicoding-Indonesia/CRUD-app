@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import DiscussionCard from '@/components/DiscussionCard';
 import data from '@/database/data.json';
 import {useState, useEffect} from 'react';
+import { useRouter } from 'next/navigation';
 
 
 const SearchPage = () => {
@@ -12,6 +13,11 @@ const SearchPage = () => {
     const [searchResults, setSearchResults] = useState(null);
     const discussion = data;
     const search = useSearchParams();
+    const router = useRouter();
+
+    const onclick = () => {
+        router.push(`/`);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,8 +26,9 @@ const SearchPage = () => {
             const encodedSearchQuery = encodeURI(searchQuery || '');
 
             const response = await fetch(`http://localhost:9000/search?q=${encodedSearchQuery}`);
-            const data = await response.json();
-            setSearchResults(data);
+            const results = await response.json();
+            setSearchResults(results.data);
+
           } catch(error){
             console.error(error);
           }
@@ -39,13 +46,13 @@ const SearchPage = () => {
                 <meta name='viewport' content='width=device-width, initial-scale=1' />
             </Head>
             <main className="py-5">
-                <h1 className="text-xl md:text-5xl text-center font-bold py-10">CRUD App Discussion Forum</h1>
+                <h1 onClick={onclick} className="text-xl md:text-5xl text-center font-bold py-10">CRUD App Discussion Forum</h1>
                 <div className="container mx-auto flex justify-end py-5">
                     <SearchInput/>
                 </div>
-                <div className="container mx-auto flex flex-wrap justify-center">
+                <div className="container mx-auto justify-center">
                 {
-                    discussion.map((obj, i) => <DiscussionCard {...obj} key={i} />)
+                    <DiscussionCard searchResults={searchResults}></DiscussionCard>
                 }
                     
                 </div> 
