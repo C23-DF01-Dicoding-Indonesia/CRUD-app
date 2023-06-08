@@ -5,18 +5,18 @@ import json
 import os
 from transformers import AutoTokenizer
 import json
-import numpy as np
 
 app = Flask(__name__)
-@app.route('/search', methods=['POST'])
+@app.route('/discussion', methods=['POST'])
 def search():
     query = request.json['query']
     print(query)
-    result = get_search_result(query)
+    result = get_tag_result(query)
     return jsonify(data = result)
 
-PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY') or "4b0aec51-befc-40eb-8dda-3cccc07f3965"
-PINECONE_ENV = os.environ.get('PINECONE_ENVIRONMENT') or 'asia-southeast1-gcp-free'
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY') or "dadb9e76-c356-4d76-96d5-d0343745d2b3"
+PINECONE_ENV = os.environ.get('PINECONE_ENVIRONMENT') or "asia-northeast1-gcp"
+VECTOR_LENGTH = 384
 
 def pinecone_init():
 
@@ -25,11 +25,8 @@ def pinecone_init():
         environment=PINECONE_ENV
     )
 
-
-def get_index(index_name = 'semantic-search'):
+def get_index(index_name: str):
     return pinecone.Index(index_name)
-
-
 
 def get_embedding(
     text: str
@@ -46,9 +43,7 @@ def get_embedding(
     result = json.loads(r.text)["predictions"][0]["last_hidden_state"][0]
     return result
 
-
-
-def semantic_search(query: str, index_name: str = "semantic-search", top_k: int = 10) -> dict:
+def semantic_search(query: str, index_name: str, top_k: int) -> dict:
     """
     Semantic search of a query in a Pinecone index.
     """
@@ -58,25 +53,28 @@ def semantic_search(query: str, index_name: str = "semantic-search", top_k: int 
     return xc
 
 
-def get_search_result(query: str) -> list:
-    index_name: str = "semantic-search"
-    top_k=20
+def get_tag_result(query: str) -> list:
+    index_name: str = "auto-tag-ml"
+    top_k = 15
+    top_m = 5
     """
     Get search result of a query in a Pinecone index.
     """
     xc = semantic_search(query, index_name, top_k)
-    result = []
+    result = dict()
+    # use dictionary to 
     for i in xc["matches"]:
-        data = {
-            "id": i["id"],
-            "title": i["metadata"]["title"],
-            "type": i["metadata"]["type"],
-            "content": i["metadata"]["content"],
-            "score": i["score"]
-        }
-        result.append(data)
-    return result
+        for j in i["metadata"]["tags"]:
+            if j in result:
+                result[j] += i["score"]
+            else:
+                result[j] = i["score"]
 
+    result = sorted(result.items(), key=lambda x: x[1], reverse=True)
+    #take top 5
+    result = [i[0] for i in result][:top_m]
+    print(result)
+    return result
 
 if __name__ == "__main__":
     pinecone_init()

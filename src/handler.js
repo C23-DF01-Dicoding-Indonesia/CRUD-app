@@ -1,82 +1,59 @@
 const { nanoid } = require('nanoid');
 const discussions = require('./discussions');
-const { spawn } = require('node:child_process');
-const fs = require('fs');
 const axios = require('axios');
 
 const addDiscussionHandler = async (request, h) => {
   const { discussion_title, question } = request.payload;
   const id = nanoid(3);
   const insertedAt = new Date().toISOString();
-  const query = discussion_title + ' ' + question;
+  const q = discussion_title + ' ' + question;
+  let result;
+  const jsonq = {
+    query: q
+  }
 
-  const childPython = spawn('python', ['./auto-tag.py', query]);
+  try {
+    result = await axios.post('https://autotag-api-4mzlrxm2sa-et.a.run.app/discussion', jsonq);
+  }
+  catch (error) {
+    console.error(error);
+  }
 
-  childPython.stdout.on('data', (data) => {
-    console.log(`${data}`);
-  });
-  childPython.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-  childPython.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
-    // Execute the try block here
-    executeTryBlock();
-  });
-  childPython.on('error', (err) => {
-    console.error('Error executing child process:', err);
-    reject(err);
-  });
+  const tags = result.data;
 
-  // Function to execute the try block
-  const executeTryBlock = () => {
-    try {
-      const data = fs.readFileSync('./tag.json', 'utf-8');
-      const jsonData = JSON.parse(data);
-      const tags = jsonData.suggested_tags;
-
-      const newDiscussions = {
-        id,
-        discussion_title,
-        question,
-        tags,
-        insertedAt,
-      };
-
-      if (discussion_title === undefined) {
-        const response = h.response({
-          status: 'fail',
-          message: 'Failed to add new discussion. Please enter the title!',
-        });
-        response.code(400);
-        return response;
-      }
-      if (question === undefined) {
-        const response = h.response({
-          status: 'fail',
-          message: 'Failed to add new discussion. Please enter the description!',
-        });
-        response.code(400);
-        return response;
-      }
-
-      discussions.push(newDiscussions);
-
-    } catch (err) {
-      console.error('Error reading JSON file:', err);
-      const response = h.response({
-        status: 'fail',
-        message: 'Error reading JSON file',
-      });
-      response.code(500);
-      return response;
-    }
+  const newDiscussions = {
+    id,
+    discussion_title,
+    question,
+    tags,
+    insertedAt,
   };
+
+  if (discussion_title === undefined) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Failed to add new discussion. Please enter the title!',
+    });
+    response.code(400);
+    return response;
+  }
+
+  if (question === undefined) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Failed to add new discussion. Please enter the description!',
+    });
+    response.code(400);
+    return response;
+  }
+
+  discussions.push(newDiscussions);
+
   const response = h.response({
     status: 'success',
     message: 'Discussion is successfully added',
     data: {
-      descId: id,
+      tags,
     },
   });
   response.code(201);
