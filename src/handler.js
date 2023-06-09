@@ -14,7 +14,7 @@ const addDiscussionHandler = async (request, h) => {
 
   try {
     result = await axios.post(
-      "https://autotag-api-4mzlrxm2sa-et.a.run.app/discussion",
+      "{auto_tag_ml_endpoint}/discussion",
       jsonq
     );
   } catch (error) {
@@ -144,7 +144,7 @@ const searchDiscussionHandler = async (request, h) => {
 
   try {
     result = await axios.post(
-      "https://search-api-4mzlrxm2sa-et.a.run.app/search",
+      "{search_ml_endpoint}/search",
       jsonq
     );
   } catch (error) {
