@@ -8,13 +8,14 @@ const addDiscussionHandler = async (request, h) => {
   const insertedAt = new Date().toISOString();
   const q = discussion_title + " " + question;
   let result;
+  const auto_tag_ml_endpoint;
   const jsonq = {
     query: q,
   };
 
   try {
     result = await axios.post(
-      "{auto_tag_ml_endpoint}/discussion",
+      "${auto_tag_ml_endpoint}/discussion",
       jsonq
     );
   } catch (error) {
@@ -141,10 +142,10 @@ const searchDiscussionHandler = async (request, h) => {
   const jsonq = {
     query: q,
   };
-
+  const search_ml_endpont;
   try {
     result = await axios.post(
-      "{search_ml_endpoint}/search",
+      "${search_ml_endpoint}/search",
       jsonq
     );
   } catch (error) {
